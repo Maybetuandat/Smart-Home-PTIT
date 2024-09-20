@@ -1,4 +1,4 @@
-package com.example.smarthomeptit.pages
+package com.example.smarthomeptit.ui.page
 
 
 import androidx.compose.foundation.background
@@ -6,19 +6,20 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.TabRowDefaults.Divider
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -27,19 +28,19 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.smarthomeptit.R
-import com.example.smarthomeptit.model.SensorData
+import com.example.smarthomeptit.data.model.SensorData
 import com.example.smarthomeptit.ui.theme.BackgroundColor
-import com.example.smarthomeptit.ui.theme.colorOrange
-import com.example.smarthomeptit.ui.theme.iconunselectedcolor
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun History(modifier: Modifier = Modifier) {
+fun HistoryPage(modifier: Modifier = Modifier) {
+    var showBottomSelectedSearch by remember {
+        mutableStateOf(false)
+    }
+    var sheetState = rememberModalBottomSheetState()
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -51,23 +52,49 @@ fun History(modifier: Modifier = Modifier) {
                 .fillMaxWidth()
                 .weight(1f)
                 .padding(top = 20.dp)
-                .padding(horizontal = 10.dp)
+                .padding(horizontal = 20.dp)
         )
         {
-            Row(modifier = Modifier.fillMaxSize()) {
-                Text(
-                    text = "History", fontSize = 40.sp,
-                    fontWeight = FontWeight.Bold
-                )
-            }
+            Text(
+                text = "History", fontSize = 40.sp,
+                fontWeight = FontWeight.Bold
+            )
         }
         Box(
             modifier = Modifier
+                .weight(2f)
                 .fillMaxWidth()
-                .weight(12f).padding(bottom = 10.dp)
+                .padding(horizontal = 20.dp)
+                .padding(top = 20.dp)
+        ) {
+            val listOfOptions = listOf("Temperature", "Humidity", "Light", "Time")
+            val onSearchOptionSelected: (Boolean) -> Unit = { isSelected ->
+                showBottomSelectedSearch = isSelected
+
+            }
+            FilterDevice(
+                showBottomSelectedSearch = onSearchOptionSelected,
+                listOfTypeSortOptions = listOfOptions
+            )
+        }
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(10f)
+                .padding(bottom = 10.dp)
         )
         {
             SensorHistory()
+        }
+        if (showBottomSelectedSearch) {
+            val listOfOptionsSearchHistoryPage =
+                mutableListOf("Tempearture", "Humidity", "Light", "Time")
+            BottomSheetSearch(
+                sheetState = sheetState,
+                onDismissRequest = { showBottomSelectedSearch = false },
+                typeOfSearchOptions = listOfOptionsSearchHistoryPage
+            )
         }
     }
 }
@@ -75,41 +102,38 @@ fun History(modifier: Modifier = Modifier) {
 @Composable
 fun SensorHistory() {
     val ListSensorData = listOf(
-        SensorData(1, 36.7, 60.0, 500.0, "08:00"),
-        SensorData(2, 36.7, 60.0, 500.0, "08:00"),
-        SensorData(3, 36.7, 60.0, 500.0, "08:00"),
-        SensorData(4, 36.7, 60.0, 500.0, "08:00"),
-        SensorData(5, 36.7, 60.0, 500.0, "08:00"),
-        SensorData(6, 36.7, 60.0, 500.0, "08:00"),
-        SensorData(7, 36.7, 60.0, 500.0, "08:00"),
-        SensorData(8, 36.7, 60.0, 500.0, "08:00"),
-        SensorData(9, 36.7, 60.0, 500.0, "08:00"),
-        SensorData(10, 36.7, 60.0, 500.0, "08:00"),
-        SensorData(11, 36.7, 60.0, 500.0, "08:00"),
-        SensorData(12, 36.7, 60.0, 500.0, "08:00"),
-        SensorData(13, 36.7, 60.0, 500.0, "08:00"),
-        SensorData(14, 36.7, 60.0, 500.0, "08:00"),
-        SensorData(15, 36.7, 60.0, 500.0, "08:00"),
-        SensorData(16, 36.7, 60.0, 500.0, "08:00"),
-        SensorData(17, 36.7, 60.0, 500.0, "08:00"),
-        SensorData(18, 36.7, 60.0, 500.0, "08:00"),
-        SensorData(19, 36.7, 60.0, 500.0, "08:00"),
-        SensorData(20, 36.7, 60.0, 500.0, "08:00"),
-        SensorData(20, 36.7, 60.0, 500.0, "08:00"),
-        SensorData(21, 36.7, 60.0, 500.0, "08:00"),
-        SensorData(22, 36.7, 60.0, 500.0, "08:00"),
-        SensorData(23, 36.7, 60.0, 500.0, "08:00"),
-        SensorData(24, 36.7, 60.0, 500.0, "08:00"),
-        SensorData(25, 36.7, 60.0, 500.0, "08:00"),
-        SensorData(26, 36.7, 60.0, 500.0, "08:00"),
-        SensorData(27, 36.7, 60.0, 500.0, "08:00"),
-        SensorData(28, 36.7, 60.0, 500.0, "08:00"),
-        SensorData(29, 36.7, 60.0, 500.0, "08:00"),
-        SensorData(30, 36.7, 60.0, 500.0, "08:00"),
+        SensorData(1, 36.7, 60.0, 500.0, "2024/09/02 08:00"),
+        SensorData(1, 36.7, 60.0, 500.0, "2024/09/02 08:00"),
+        SensorData(1, 36.7, 60.0, 500.0, "2024/09/02 08:00"),
+        SensorData(1, 36.7, 60.0, 500.0, "2024/09/02 08:00"),
+        SensorData(1, 36.7, 60.0, 500.0, "2024/09/02 08:00"),
+        SensorData(1, 36.7, 60.0, 500.0, "2024/09/02 08:00"),
+        SensorData(1, 36.7, 60.0, 500.0, "2024/09/02 08:00"),
+        SensorData(1, 36.7, 60.0, 500.0, "2024/09/02 08:00"),
+        SensorData(1, 36.7, 60.0, 500.0, "2024/09/02 08:00"),
+        SensorData(1, 36.7, 60.0, 500.0, "2024/09/02 08:00"),
+        SensorData(1, 36.7, 60.0, 500.0, "2024/09/02 08:00"),
+        SensorData(1, 36.7, 60.0, 500.0, "2024/09/02 08:00"),
+        SensorData(1, 36.7, 60.0, 500.0, "2024/09/02 08:00"),
+        SensorData(1, 36.7, 60.0, 500.0, "2024/09/02 08:00"),
+        SensorData(1, 36.7, 60.0, 500.0, "2024/09/02 08:00"),
+        SensorData(1, 36.7, 60.0, 500.0, "2024/09/02 08:00"),
+        SensorData(1, 36.7, 60.0, 500.0, "2024/09/02 08:00"),
+        SensorData(1, 36.7, 60.0, 500.0, "2024/09/02 08:00"),
+        SensorData(1, 36.7, 60.0, 500.0, "2024/09/02 08:00"),
+        SensorData(1, 36.7, 60.0, 500.0, "2024/09/02 08:00"),
+        SensorData(1, 36.7, 60.0, 500.0, "2024/09/02 08:00"),
+        SensorData(1, 36.7, 60.0, 500.0, "2024/09/02 08:00"),
+        SensorData(1, 36.7, 60.0, 500.0, "2024/09/02 08:00"),
+        SensorData(1, 36.7, 60.0, 500.0, "2024/09/02 08:00"),
+        SensorData(1, 36.7, 60.0, 500.0, "2024/09/02 08:00"),
+        SensorData(1, 36.7, 60.0, 500.0, "2024/09/02 08:00"),
+        SensorData(1, 36.7, 60.0, 500.0, "2024/09/02 08:00"),
+        SensorData(1, 36.7, 60.0, 500.0, "2024/09/02 08:00"),
+        SensorData(1, 36.7, 60.0, 500.0, "2024/09/02 08:00"),
+        SensorData(1, 36.7, 60.0, 500.0, "2024/09/02 08:00"),
     )
     val fonsize = 15.sp
-    var selectSort by remember{mutableStateOf("")}
-    var selectSensor by remember{mutableStateOf("")}
     Card(
         modifier = Modifier
             .padding(horizontal = 20.dp)
@@ -122,47 +146,6 @@ fun SensorHistory() {
 
         LazyColumn(modifier = Modifier.padding(10.dp)) {
             // Add a header at the top of the LazyColumn
-
-            item {
-                Row(modifier = Modifier
-                    .fillMaxWidth()
-                    .height(50.dp)
-                )
-                {
-                    Box(modifier = Modifier
-                        .weight(1f)
-                        .fillMaxHeight()
-
-                    )
-                    {
-
-                              Box(modifier  = Modifier.fillMaxSize().padding(10.dp), contentAlignment = Alignment.Center )
-                              {
-                                  Icon(modifier = Modifier, painter = painterResource(id = R.drawable.icon_filter), contentDescription = null, tint = Color.Black,
-                                  )
-                              }
-
-
-                    }
-                    Box(modifier = Modifier
-                        .weight(1f)
-                        .fillMaxHeight())
-                    {
-                        val listSortItem = listOf("Increase", "DeCrease")
-                        DropdownMenu(listSortItem, "Sort", selectedDropDownItem = { selectSort = it })
-                    }
-                    Box(modifier = Modifier
-                        .weight(1f)
-                        .fillMaxHeight())
-                    {
-                        // item chua dropdown cua cac loai thong so nhu temperature, humidity, light
-                        val listDataSensort = listOf("Temperature", "Humidity", "Light", "Time")
-                        DropdownMenu(listDataSensort, "Sensor", selectedDropDownItem = { selectSensor = it })
-                    }
-
-                }
-
-            }
             item {
                 Row(
                     modifier = Modifier
@@ -192,7 +175,14 @@ fun SensorHistory() {
                         Text(text = "Time", fontSize = fonsize, fontWeight = FontWeight.Bold)
                     }
 
+
                 }
+                Divider(
+                    color = Color.LightGray.copy(alpha = 0.5f),
+                    thickness = 1.dp,
+                    modifier = Modifier.padding(horizontal = 20.dp)
+                )
+                Spacer(modifier = Modifier.height(10.dp))
             }
 
             // List items
@@ -217,7 +207,12 @@ fun SensorHistory() {
                         Text(text = item.time, fontSize = fonsize)
                     }
                 }
-
+                Divider(
+                    color = Color.LightGray.copy(alpha = 0.5f),
+                    thickness = 1.dp,
+                    modifier = Modifier.padding(horizontal = 20.dp)
+                )
+                Spacer(modifier = Modifier.height(10.dp))
                 // Log.i("maybetuandat", "index is $index")
             }
 
@@ -226,8 +221,3 @@ fun SensorHistory() {
     }
 }
 
-@Preview
-@Composable
-fun previewhistory() {
-    SensorHistory()
-}

@@ -59,6 +59,7 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.runtime.livedata)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -67,7 +68,28 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+    // draw chart about data sensor and humidity
     implementation("io.github.thechance101:chart:Beta-0.0.5")
+
+    //library for view model
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
+
+    //library for navigation
+    implementation("androidx.navigation:navigation-compose:2.7.7")
+
+    //get api from server
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+
+    // socket.io
+    implementation("io.socket:socket.io-client:2.1.0")
+    implementation("io.socket:engine.io-client:2.1.0")
+// https://mvnrepository.com/artifact/androidx.compose.material3/material3
+    runtimeOnly("androidx.compose.material3:material3:1.3.0")
+
+
+
 
 
 

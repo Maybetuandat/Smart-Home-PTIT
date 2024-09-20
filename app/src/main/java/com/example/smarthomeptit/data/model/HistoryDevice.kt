@@ -1,4 +1,4 @@
-package com.example.smarthomeptit.model
+package com.example.smarthomeptit.data.model
 
 data class HistoryDevice(val nameDevice : String, val time : String, val status : String):Comparable<HistoryDevice>
 {
