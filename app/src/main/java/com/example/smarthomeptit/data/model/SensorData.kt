@@ -1,9 +1,11 @@
 package com.example.smarthomeptit.data.model
 
+import java.util.Date
+
 data class SensorData(
-    val id : Int,
-    val temperature: Double,
-    val humidity: Double,
-    val lightIntensity: Double,
-    val time : String
+    val Id : Int,
+    val Temperature: Float,
+    val Humidity: Float,
+    val Light: Float,
+    val Time : Date
 )

@@ -2,24 +2,38 @@ package com.example.smarthomeptit.data.api
 
 
 import com.example.smarthomeptit.data.model.ResponseBody
-import retrofit2.Call
+import com.example.smarthomeptit.data.model.ResponseDevicePage
+import com.example.smarthomeptit.data.model.ResponseHistoryPage
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface ApiInterface {
-    @GET("/api/device_controller/led")
-    suspend  fun controlDeviceLed(
-        @Query("parameter") parameter : Int
+    @GET("/api/device_controller")
+    suspend fun controlDeviceLed(
+        @Query("parameter") parameter: Int,
+        @Query("id") id: Int
     ): Response<ResponseBody>
-    @GET("/api/device_controller/fan")
-    suspend fun controDeviceFan(
-        @Query("parameter") parameter: Int
-    ): Response<ResponseBody>
-    @GET("/api/device_controller/air_conditioner")
-    suspend fun controDeviceAirConditioner(
-        @Query("parameter") parameter: Int
-    ): Response<ResponseBody>
+
+    @GET("/api/get_history_device")
+    suspend fun getHistoryDevice(
+        @Query("value") value: String,
+        @Query("typeSearch") typeSearch: String,
+        @Query("typeSort") typeSort: String,
+        @Query("sort") sort: String,
+        @Query("page") page: Int,
+        @Query("pageSize") pageSize: Int
+    ): Response<ResponseDevicePage>
+
+    @GET("/api/get_history_data_sensor")
+    suspend fun getHistoryDataSensor(
+        @Query("value") value: String,
+        @Query("typeSearch") typeSearch: String,
+        @Query("typeSort") typeSort: String,
+        @Query("sort") sort: String,
+        @Query("page") page: Int,
+        @Query("pageSize") pageSize: Int,
+    ): Response<ResponseHistoryPage>
 
 
 }

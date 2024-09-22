@@ -1,10 +1,12 @@
 package com.example.smarthomeptit.viewModel
 
 import android.util.Log
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.smarthomeptit.data.model.HistoryDevice
 import com.example.smarthomeptit.data.model.ResponseBody
 
 import com.example.smarthomeptit.data.repository.Repository
@@ -57,11 +59,11 @@ class HomeViewModel : ViewModel() {
     //update api from server
 //    private val apiRepository = ApiRepository()
     private val repository = Repository()
-    fun controlDeviceLed(parameter: Int) {
+    fun controlDevice(parameter: Int, id : Int) {
         Log.d("control_device", "controlDeviceLed: $parameter")
         viewModelScope.launch {
             try {
-                val response = repository.controlDeviceLed(parameter)
+                val response = repository.controlDeviceLed(parameter, id)
                 if (response.isSuccessful)
                 {
                     //handle any thing
@@ -72,38 +74,38 @@ class HomeViewModel : ViewModel() {
             }
         }
     }
-    fun controlDeviceFan(parameter: Int)
-    {
-        Log.d("control_device", "controlDeviceFan: $parameter")
-        viewModelScope.launch{
-            try {
-                val response = repository.controlDeviceFan(parameter)
-                if(response.isSuccessful)
-                {
-                    //
-                }
-            } catch ( e : Exception)
-            {
-                Log.e("control_device", e.toString())
-            }
-        }
-    }
-    fun controlDeviceAirConditioner(parameter: Int)
-    {
-        Log.d("control_device", "controlDeviceAirConditioner: $parameter")
-        viewModelScope.launch {
-            try {
-                val response = repository.controlDeviceAirConditioner(parameter)
-                if(response.isSuccessful)
-                {
-                    //handle any thing
-                }
-
-            }
-            catch (e : Exception)
-            {
-                Log.e("control_device", e.toString())
-            }
-        }
-    }
+//    fun controlDeviceFan(parameter: Int)
+//    {
+//        Log.d("control_device", "controlDeviceFan: $parameter")
+//        viewModelScope.launch{
+//            try {
+//                val response = repository.controlDeviceFan(parameter)
+//                if(response.isSuccessful)
+//                {
+//                    //
+//                }
+//            } catch ( e : Exception)
+//            {
+//                Log.e("control_device", e.toString())
+//            }
+//        }
+//    }
+//    fun controlDeviceAirConditioner(parameter: Int)
+//    {
+//        Log.d("control_device", "controlDeviceAirConditioner: $parameter")
+//        viewModelScope.launch {
+//            try {
+//                val response = repository.controlDeviceAirConditioner(parameter)
+//                if(response.isSuccessful)
+//                {
+//                    //handle any thing
+//                }
+//
+//            }
+//            catch (e : Exception)
+//            {
+//                Log.e("control_device", e.toString())
+//            }
+//        }
+//    }
 }

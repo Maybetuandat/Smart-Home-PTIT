@@ -141,19 +141,13 @@ fun HomePage(viewModel: HomeViewModel) {
                         .fillMaxWidth()
                 )
                 {
-                    val controlLed:(ac : Int) -> Unit = {ac->
-                        viewModel.controlDeviceLed(ac)
+                    val controlDevice:(ac : Int, id : Int) -> Unit = {ac, id ->
+                        viewModel.controlDevice(ac, id)
 
                     }
-                    val controlFan:(ac : Int) -> Unit = { ac ->
 
-                        viewModel.controlDeviceFan(ac)
-                    }
-                    val controlAirConditioner:(ac : Int) -> Unit = { ac ->
-                    viewModel.controlDeviceAirConditioner(ac)
 
-                    }
-                    DeviceSwitch(controlLed, controlFan,controlAirConditioner, ledStatus, fanStatus,airConditionerStatus )
+                    DeviceSwitch(controlDevice, ledStatus, fanStatus,airConditionerStatus )
                 }
             }
 
@@ -169,9 +163,8 @@ data class DeviceController(
 )
 
 @Composable
-fun DeviceSwitch(controlLed:(ac:Int) -> Unit,
-                 controlFan:(ac:Int) -> Unit,
-                 controlAirConditioner:(ac:Int) -> Unit,
+fun DeviceSwitch(controlDevice:(ac:Int, id : Int) -> Unit,
+
                  ledStatus: Int,
                  fanStatus: Int,
                  airConditionerStatus: Int
@@ -194,7 +187,7 @@ fun DeviceSwitch(controlLed:(ac:Int) -> Unit,
 
             )
             {
-                DeviceSplitTwo(itemList[0], controlFan, fanStatus, "fan")
+                DeviceSplitTwo(itemList[0], controlDevice, fanStatus, "fan")
             }
             Box(
                 modifier = Modifier
@@ -203,7 +196,7 @@ fun DeviceSwitch(controlLed:(ac:Int) -> Unit,
                     .padding(bottom = 10.dp).padding(horizontal = 10.dp)
             )
             {
-                DeviceSplitTwo(itemList[1], controlLed, ledStatus, "led")
+                DeviceSplitTwo(itemList[1], controlDevice, ledStatus, "led")
             }
         }
         Box(
@@ -212,7 +205,7 @@ fun DeviceSwitch(controlLed:(ac:Int) -> Unit,
                 .weight(1f).padding(horizontal = 10.dp).padding(bottom = 10.dp)
         )
         {
-            DeviceSplitOne(itemList[2], controlAirConditioner, airConditionerStatus)
+            DeviceSplitOne(itemList[2], controlDevice, airConditionerStatus)
         }
     }
 }
@@ -220,7 +213,7 @@ fun DeviceSwitch(controlLed:(ac:Int) -> Unit,
 
 @Composable
 fun DeviceSplitOne(item: DeviceController,
-                   controlAirConditioner: (ac: Int) -> Unit,
+                   controlDevice: (ac: Int, id: Int) -> Unit,
                    airConditionerStatus:Int
                    ) {
 
@@ -266,7 +259,7 @@ fun DeviceSplitOne(item: DeviceController,
                         onCheckedChange = {
 
 
-                            controlAirConditioner(if(it) 1 else 0)
+                            controlDevice(if(it) 1 else 0, 3)
 
                         },
                         modifier = Modifier.scale(1.5f),
@@ -296,10 +289,11 @@ fun DeviceSplitOne(item: DeviceController,
 
 @Composable
 fun DeviceSplitTwo(item: DeviceController,
-                   action:(ac : Int) -> Unit,
+                   action:(ac : Int, id : Int) -> Unit,
                    status: Int,
                    type:String) {
 
+    val id : Int = if(type == "led") 1 else 2
     val infiniteTransition = rememberInfiniteTransition()
     val rotation by infiniteTransition.animateFloat(
         initialValue = 0f,
@@ -376,7 +370,7 @@ fun DeviceSplitTwo(item: DeviceController,
                         onCheckedChange = {
 
 
-                            action(if(it) 1 else 0)
+                            action(if(it) 1 else 0, id)
 
                         },
                         modifier = Modifier.scale(1.5f),
