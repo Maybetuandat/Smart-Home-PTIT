@@ -1,6 +1,7 @@
 package com.example.smarthomeptit.ui.page
 
 
+import android.util.Log
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
@@ -18,10 +19,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
-
-
+import androidx.compose.material.Switch
+import androidx.compose.material.SwitchDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenuItem
@@ -29,9 +31,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material.Switch
-import androidx.compose.material.SwitchDefaults
-
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -56,7 +55,6 @@ import com.aay.compose.lineChart.model.LineType
 import com.example.smarthomeptit.R
 import com.example.smarthomeptit.ui.theme.BackGroundDropDow
 import com.example.smarthomeptit.ui.theme.BackgroundColor
-import com.example.smarthomeptit.ui.theme.Black
 import com.example.smarthomeptit.ui.theme.LightColor
 import com.example.smarthomeptit.ui.theme.Red
 import com.example.smarthomeptit.ui.theme.White
@@ -68,9 +66,7 @@ import com.example.smarthomeptit.viewModel.HomeViewModel
 @Composable
 fun HomePage(viewModel: HomeViewModel) {
 
-    var selectedChart by remember {
-        mutableStateOf("Temperature")
-    }
+
     val temperature by viewModel.temperature.observeAsState(initial = "32")
     val humidity by viewModel.humidity.observeAsState(initial = "70")
     val light by viewModel.light.observeAsState(initial = "1000")
@@ -96,7 +92,7 @@ fun HomePage(viewModel: HomeViewModel) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .weight(5f)
+                .weight(6f)
         ) {
             Column(modifier = Modifier.fillMaxSize()) {
 
@@ -104,24 +100,28 @@ fun HomePage(viewModel: HomeViewModel) {
                     modifier = Modifier
                         .weight(4f)
                         .fillMaxWidth()
+
                 ) {
 
-                    Chart(selectedChart)
+                        Chart(viewModel)
+
+
 
                 }
                 Box(
                     modifier = Modifier
                         .weight(0.6f)
                         .fillMaxWidth()
+                        .padding(top = 10.dp)
                 ) {
-                    DropDown(selectedChart = { selectedChart = it })
+                    DropDown(viewModel)
                 }
             }
         }
 
         Box(
             modifier = Modifier
-                .weight(5f)
+                .weight(4f)
                 .fillMaxWidth()
                 .padding(top = 10.dp)
         )
@@ -135,19 +135,19 @@ fun HomePage(viewModel: HomeViewModel) {
                 ) {
                     HomeStatus(temperature, humidity, light)
                 }
-                Box(
+                LazyColumn(
                     modifier = Modifier
                         .weight(2f)
                         .fillMaxWidth()
                 )
                 {
-                    val controlDevice:(ac : Int, id : Int) -> Unit = {ac, id ->
+                    val controlDevice: (ac: Int, id: Int) -> Unit = { ac, id ->
                         viewModel.controlDevice(ac, id)
 
                     }
 
 
-                    DeviceSwitch(controlDevice, ledStatus, fanStatus,airConditionerStatus )
+                    item { DeviceSwitch(controlDevice, ledStatus, fanStatus, airConditionerStatus) }
                 }
             }
 
@@ -163,18 +163,21 @@ data class DeviceController(
 )
 
 @Composable
-fun DeviceSwitch(controlDevice:(ac:Int, id : Int) -> Unit,
+fun DeviceSwitch(
+    controlDevice: (ac: Int, id: Int) -> Unit,
 
-                 ledStatus: Int,
-                 fanStatus: Int,
-                 airConditionerStatus: Int
+    ledStatus: Int,
+    fanStatus: Int,
+    airConditionerStatus: Int
 ) {
     val itemList = mutableListOf(
         DeviceController("Fan", R.drawable.icon_fan_device),
         DeviceController("Light", R.drawable.icon_light_device),
         DeviceController("Smart AirConditioner", R.drawable.aircondition_icon)
     )
-    Column(modifier = Modifier.fillMaxSize()) {
+    Column(modifier = Modifier
+        .height(300.dp)
+        .fillMaxWidth()) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -183,7 +186,9 @@ fun DeviceSwitch(controlDevice:(ac:Int, id : Int) -> Unit,
             Box(
                 modifier = Modifier
                     .fillMaxHeight()
-                    .weight(1f).padding(bottom = 10.dp).padding(start = 10.dp)
+                    .weight(1f)
+                    .padding(bottom = 10.dp)
+                    .padding(start = 10.dp)
 
             )
             {
@@ -193,7 +198,8 @@ fun DeviceSwitch(controlDevice:(ac:Int, id : Int) -> Unit,
                 modifier = Modifier
                     .fillMaxHeight()
                     .weight(1f)
-                    .padding(bottom = 10.dp).padding(horizontal = 10.dp)
+                    .padding(bottom = 10.dp)
+                    .padding(horizontal = 10.dp)
             )
             {
                 DeviceSplitTwo(itemList[1], controlDevice, ledStatus, "led")
@@ -202,7 +208,9 @@ fun DeviceSwitch(controlDevice:(ac:Int, id : Int) -> Unit,
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .weight(1f).padding(horizontal = 10.dp).padding(bottom = 10.dp)
+                .weight(1f)
+                .padding(horizontal = 10.dp)
+                .padding(bottom = 10.dp)
         )
         {
             DeviceSplitOne(itemList[2], controlDevice, airConditionerStatus)
@@ -212,12 +220,13 @@ fun DeviceSwitch(controlDevice:(ac:Int, id : Int) -> Unit,
 
 
 @Composable
-fun DeviceSplitOne(item: DeviceController,
-                   controlDevice: (ac: Int, id: Int) -> Unit,
-                   airConditionerStatus:Int
-                   ) {
+fun DeviceSplitOne(
+    item: DeviceController,
+    controlDevice: (ac: Int, id: Int) -> Unit,
+    airConditionerStatus: Int
+) {
 
-    var color = if(airConditionerStatus == 1) iconselectedcolor else iconunselectedcolor
+    var color = if (airConditionerStatus == 1) iconselectedcolor else iconunselectedcolor
     Card(
         modifier = Modifier.fillMaxSize(),
         shape = RoundedCornerShape(4.dp),
@@ -242,8 +251,10 @@ fun DeviceSplitOne(item: DeviceController,
                     Icon(
                         painter = painterResource(id = item.icon),
                         contentDescription = item.label,
-                        tint =color,
-                        modifier = Modifier.height(80.dp).width(80.dp)
+                        tint = color,
+                        modifier = Modifier
+                            .height(80.dp)
+                            .width(80.dp)
                     )
                 }
                 // box nay chua switch
@@ -255,11 +266,11 @@ fun DeviceSplitOne(item: DeviceController,
                 )
                 {
                     Switch(
-                        checked = (if(airConditionerStatus == 1) true else false),
+                        checked = (if (airConditionerStatus == 1) true else false),
                         onCheckedChange = {
 
 
-                            controlDevice(if(it) 1 else 0, 3)
+                            controlDevice(if (it) 1 else 0, 3)
 
                         },
                         modifier = Modifier.scale(1.5f),
@@ -288,12 +299,14 @@ fun DeviceSplitOne(item: DeviceController,
 }
 
 @Composable
-fun DeviceSplitTwo(item: DeviceController,
-                   action:(ac : Int, id : Int) -> Unit,
-                   status: Int,
-                   type:String) {
+fun DeviceSplitTwo(
+    item: DeviceController,
+    action: (ac: Int, id: Int) -> Unit,
+    status: Int,
+    type: String
+) {
 
-    val id : Int = if(type == "led") 1 else 2
+    val id: Int = if (type == "led") 1 else 2
     val infiniteTransition = rememberInfiniteTransition()
     val rotation by infiniteTransition.animateFloat(
         initialValue = 0f,
@@ -302,10 +315,12 @@ fun DeviceSplitTwo(item: DeviceController,
             animation = tween(durationMillis = 1000, easing = LinearEasing)
         ), label = ""
     )
-    var colorFan = if(status == 1) iconselectedcolor else iconunselectedcolor
-    var colorLight = if(status == 1) LightColor else iconunselectedcolor
+    var colorFan = if (status == 1) iconselectedcolor else iconunselectedcolor
+    var colorLight = if (status == 1) LightColor else iconunselectedcolor
     Card(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .height(150.dp)
+            .fillMaxWidth(),
         shape = RoundedCornerShape(4.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
@@ -325,34 +340,36 @@ fun DeviceSplitTwo(item: DeviceController,
                     contentAlignment = Alignment.Center
                 )
                 {
-                    if(type=="fan")
-                    {
-                        if(status == 1)
-                        {
+                    if (type == "fan") {
+                        if (status == 1) {
                             Icon(
                                 painter = painterResource(id = item.icon),
                                 contentDescription = item.label,
-                                tint =colorFan,
-                                modifier = Modifier.height(45.dp).width(45.dp).rotate(rotation)
+                                tint = colorFan,
+                                modifier = Modifier
+                                    .height(45.dp)
+                                    .width(45.dp)
+                                    .rotate(rotation)
                             )
-                        }
-                        else{
+                        } else {
                             Icon(
                                 painter = painterResource(id = item.icon),
                                 contentDescription = item.label,
-                                tint =colorFan,
-                                modifier = Modifier.height(45.dp).width(45.dp)
+                                tint = colorFan,
+                                modifier = Modifier
+                                    .height(45.dp)
+                                    .width(45.dp)
                             )
                         }
 
-                    }
-                    else
-                    {
+                    } else {
                         Icon(
                             painter = painterResource(id = item.icon),
                             contentDescription = item.label,
-                            tint =colorLight,
-                            modifier = Modifier.height(45.dp).width(45.dp)
+                            tint = colorLight,
+                            modifier = Modifier
+                                .height(45.dp)
+                                .width(45.dp)
                         )
                     }
 
@@ -366,18 +383,18 @@ fun DeviceSplitTwo(item: DeviceController,
                 )
                 {
                     Switch(
-                        checked = if(status == 1) true else false,
+                        checked = if (status == 1) true else false,
                         onCheckedChange = {
 
 
-                            action(if(it) 1 else 0, id)
+                            action(if (it) 1 else 0, id)
 
                         },
                         modifier = Modifier.scale(1.5f),
                         colors = SwitchDefaults.colors(
                             checkedThumbColor = White,
                             uncheckedThumbColor = Color.White,
-                            checkedTrackColor = if(type == "fan") iconselectedcolor else LightColor,
+                            checkedTrackColor = if (type == "fan") iconselectedcolor else LightColor,
                             uncheckedTrackColor = iconunselectedcolor.copy(0.4f)
                         )
                     )
@@ -435,7 +452,14 @@ fun HomeStatus(temperature: String, humidity: String, light: String) {
                     .weight(1f)
             )
             {
-                HomeStatusItem(ItemStatus("Độ ẩm", R.drawable.humidity_icon, "${humidity}%", colorHumidity))
+                HomeStatusItem(
+                    ItemStatus(
+                        "Độ ẩm",
+                        R.drawable.humidity_icon,
+                        "${humidity}%",
+                        colorHumidity
+                    )
+                )
             }
             Box(
                 modifier = Modifier
@@ -475,7 +499,11 @@ fun HomeStatusItem(Item: ItemStatus) {
                 .weight(1f), contentAlignment = Alignment.Center
         )
         {
-            Icon(painter = painterResource(id = Item.icon), contentDescription = null, tint = Item.color)
+            Icon(
+                painter = painterResource(id = Item.icon),
+                contentDescription = null,
+                tint = Item.color
+            )
         }
         Box(
             modifier = Modifier
@@ -493,19 +521,19 @@ data class ItemStatus(
     val label: String,
     val icon: Int,
     val data: String,
-    val color : Color
+    val color: Color
 )
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DropDown(selectedChart: (String) -> Unit) {
+fun DropDown(viewModel: HomeViewModel) {
     val list = listOf("Temperature", "Humidity", "Light")
 
 
-    var selectedText by remember {
-        mutableStateOf(list[0])
-    }
+//    var selectedText by remember {
+//        mutableStateOf(list[0])
+//    }
     var isExpanded by remember {
         mutableStateOf(false)
     }
@@ -526,7 +554,7 @@ fun DropDown(selectedChart: (String) -> Unit) {
                     shape = RoundedCornerShape(40.dp)  // Bo góc cho BasicTextField
                 )
                 .padding(vertical = 16.dp),  // Padding bên trong
-                value = selectedText,
+                value = viewModel.selectedChart,
                 onValueChange = {},
                 readOnly = true,
                 decorationBox = { innerTextField ->  // Hộp chứa trang trí cho BasicTextField
@@ -542,7 +570,11 @@ fun DropDown(selectedChart: (String) -> Unit) {
                     }
                 })
 
-            ExposedDropdownMenu(expanded = isExpanded, onDismissRequest = { isExpanded = false }, modifier = Modifier.background(White)) {
+            ExposedDropdownMenu(
+                expanded = isExpanded,
+                onDismissRequest = { isExpanded = false },
+                modifier = Modifier.background(White)
+            ) {
                 list.forEachIndexed { index, text ->
                     DropdownMenuItem(
                         text = {
@@ -551,9 +583,9 @@ fun DropDown(selectedChart: (String) -> Unit) {
                             )
                         },
                         onClick = {
-                            selectedText = list[index]
+                            viewModel.selectedChart = list[index]
                             isExpanded = false
-                            selectedChart(list[index])
+
                         },
                         modifier = Modifier
                             .background(Color.Transparent)  // Nền của DropdownMenuItem
@@ -569,53 +601,78 @@ fun DropDown(selectedChart: (String) -> Unit) {
 
 
 @Composable
-fun Chart(selectedChart: String) {
-    val testLineParameters: List<LineParameters> = if (selectedChart == "Temperature") {
-        listOf(
-            LineParameters(
-                label = "Temperature",
-                data = listOf(22.0, 18.0, 25.0, 23.0, 27.0),
-                lineColor = iconselectedcolor,
-                lineType = LineType.CURVED_LINE,
-                lineShadow = true,
-            )
-        )
-    } else {
-        listOf(
-            LineParameters(
-                label = "Humidity",
-                data = listOf(62.0, 56.0, 51.0, 62.0, 67.0),
-                lineColor = iconselectedcolor,
-                lineType = LineType.CURVED_LINE,
-                lineShadow = true,
-            )
-        )
-    }
+fun Chart(viewModel: HomeViewModel) {
+    Card(modifier = Modifier.fillMaxSize(),
+        shape = RoundedCornerShape(4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp))
+    {
+        var listData: List<Double> = emptyList()
 
-    Box(Modifier) {
-        LineChart(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(10.dp),
-            linesParameters = testLineParameters,
-            isGrid = true,
-            gridColor = Color.Gray,
-            xAxisData = listOf("1", "2", "3", "4", "5"),
-            animateChart = true,
-            showGridWithSpacer = true,
-            yAxisStyle = TextStyle(
-                fontSize = 14.sp,
-                color = Color.Gray,
-            ),
-            xAxisStyle = TextStyle(
-                fontSize = 14.sp, color = Color.Gray, fontWeight = FontWeight.W400
-            ),
-            yAxisRange = 5,
-            oneLineChart = false,
-            gridOrientation = GridOrientation.GRID,
-            showXAxis = true
-        )
-    }
+        when (viewModel.selectedChart) {
+            "Temperature" -> {
+                listData = viewModel.listTemperature
+            }
 
+            "Humidity" -> {
+                listData = viewModel.listHumidity
+            }
+
+            "Light" -> {
+                listData = viewModel.listLight
+            }
+        }
+        if(listData.isEmpty())
+        {
+                Box(modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center)
+                {
+                    Text(text = "No data")
+                }
+        }
+        else
+        {
+            Log.d("Chart", listData.toString())
+            val testLineParameters: List<LineParameters> = listOf(
+                LineParameters(
+                    label = viewModel.selectedChart,  // Đặt label dựa trên biểu đồ đang được chọn
+                    data = listData,
+                    lineColor = iconselectedcolor,
+                    lineType = LineType.CURVED_LINE,
+                    lineShadow = true,
+                )
+            )
+
+
+            Box(
+                Modifier
+                    .fillMaxSize()
+                    .padding()) {
+                LineChart(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(10.dp),
+                    linesParameters = testLineParameters,
+                    isGrid = true,
+                    gridColor = Color.Gray,
+                    xAxisData = listOf("0", "1", "2", "3", "4"),
+                    animateChart = true,
+                    showGridWithSpacer = true,
+                    yAxisStyle = TextStyle(
+                        fontSize = 14.sp,
+                        color = Color.Gray,
+                    ),
+                    xAxisStyle = TextStyle(
+                        fontSize = 14.sp, color = Color.Gray, fontWeight = FontWeight.W400
+                    ),
+                    yAxisRange = 5,
+                    oneLineChart = false,
+                    gridOrientation = GridOrientation.GRID,
+                    showXAxis = true
+                )
+            }
+        }
+
+    }
 }
 

@@ -2,6 +2,7 @@ package com.example.smarthomeptit.data.api
 
 
 import com.example.smarthomeptit.data.model.ResponseBody
+import com.example.smarthomeptit.data.model.ResponseDataForChart
 import com.example.smarthomeptit.data.model.ResponseDevicePage
 import com.example.smarthomeptit.data.model.ResponseHistoryPage
 import retrofit2.Response
@@ -34,6 +35,10 @@ interface ApiInterface {
         @Query("page") page: Int,
         @Query("pageSize") pageSize: Int,
     ): Response<ResponseHistoryPage>
+    @GET("/api/get_history_data_sensor_for_chart")
+    suspend fun getHistoryDataSensorForChart(
+        @Query("key") key : String
+    ):Response<List<ResponseDataForChart>>
 
 
 }

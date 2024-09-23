@@ -10,6 +10,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.smarthomeptit.data.model.HistoryDevice
 import com.example.smarthomeptit.data.model.PaginationObject
 import com.example.smarthomeptit.data.repository.Repository
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class DeviePageViewModel : ViewModel() {
@@ -23,6 +24,7 @@ class DeviePageViewModel : ViewModel() {
 
     fun updateFetchHistoryDevice() {
         state.historyDevice = emptyList()
+        state.isLoading = true
         state.pagination.current_page = 1
         state.pagination.total_page = 3
         Log.d("DevicePage", state.valueSearch + "da goi den update")
@@ -35,13 +37,11 @@ class DeviePageViewModel : ViewModel() {
     ) {
 
 
+        state.isLoading = true
         viewModelScope.launch {
+
+           
             try {
-//                Log.d("DevicePage", "fectch Device Page  ")
-//                Log.d("DevicePage",  state.valueSearch)
-//                Log.d("DevicePage",  state.sort)
-//                Log.d("DevicePage", state.typeSort)
-//                Log.d("DevicePage", state.typeSearch)
                 var response = repository.getHistoryDevice(
                     state.valueSearch,
                     state.typeSearch,
@@ -50,40 +50,40 @@ class DeviePageViewModel : ViewModel() {
                     state.pagination.current_page,
                     state.pagination.page_size
                 )
-                Log.d("DevicePage", response.body()?.data.toString())
+
                 if (response.isSuccessful) {
 
-                        state = state.copy(
-                            historyDevice = state.historyDevice + response.body()?.data!!,
-                            pagination = response.body()?.meta!!,
-                            endReach = state.pagination.current_page == response.body()?.meta?.total_page,
-                        )
-                    Log.d("DevicePage", state.historyDevice.toString() + "sau fetch data")
+                    state = state.copy(
+                        historyDevice = state.historyDevice + response.body()?.data!!,
+                        pagination = response.body()?.meta!!,
+                        endReach = state.pagination.current_page == response.body()?.meta?.total_page,
+                    )
 
 
 
+                    state.isLoading = false
 
                 } else {
-                     state = state.copy(
-                         historyDevice = emptyList(),
-                         pagination = PaginationObject(1, 25, null, null, null)
-                     )
-                    Log.d("DevicePage", "da update state")
+                    state = state.copy(
+                        historyDevice = emptyList(),
+                        pagination = PaginationObject(1, 25, null, null, null)
+                    )
+
+                    state.isLoading = false
                 }
-                Log.d("DevicePage", state.historyDevice.toString())
+
             } catch (e: Exception) {
                 Log.d("DevicePageViewModel", e.toString())
+                state.isLoading = false
 
             }
 
 
         }
-        //   Log.d("DevicePage", state.historyDevice.toString())
+
     }
 
-    override fun onCleared() {
-        super.onCleared()
-    }
+
     data class ScreenState(
         var historyDevice: List<HistoryDevice> = emptyList(),
         var typeSearch: String = "Time",

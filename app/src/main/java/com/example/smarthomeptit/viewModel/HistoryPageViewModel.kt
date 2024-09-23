@@ -14,8 +14,7 @@ import kotlinx.coroutines.launch
 
 class HistoryPageViewModel : ViewModel() {
 
-    var  state by mutableStateOf(ScreenState())
-
+    var state by mutableStateOf(ScreenState())
     private val repository = Repository()
 
     init {
@@ -26,9 +25,6 @@ class HistoryPageViewModel : ViewModel() {
         state.historyDataSensor = emptyList()
         state.pagination.current_page = 1
         state.pagination.total_page = 3
-        Log.d("DevicePage", state.valueSearch + "da goi den update")
-        Log.d("DevicePage", state.typeSearch)
-        Log.d("DevicePage", state.historyDataSensor.toString())
         fetchHistoryDataSensor()
     }
 
@@ -38,11 +34,7 @@ class HistoryPageViewModel : ViewModel() {
 
         viewModelScope.launch {
             try {
-//                Log.d("DevicePage", "fectch Device Page  ")
-//                Log.d("DevicePage",  state.valueSearch)
-//                Log.d("DevicePage",  state.sort)
-//                Log.d("DevicePage", state.typeSort)
-//                Log.d("DevicePage", state.typeSearch)
+                state.isLoading = true
                 var response = repository.getHistoryDataSensor(
                     state.valueSearch,
                     state.typeSearch,
@@ -51,7 +43,7 @@ class HistoryPageViewModel : ViewModel() {
                     state.pagination.current_page,
                     state.pagination.page_size
                 )
-                Log.d("DevicePage", response.body()?.data.toString())
+
                 if (response.isSuccessful) {
 
                     state = state.copy(
@@ -59,7 +51,8 @@ class HistoryPageViewModel : ViewModel() {
                         pagination = response.body()?.meta!!,
                         endReach = state.pagination.current_page == response.body()?.meta?.total_page,
                     )
-                    Log.d("DevicePage", state.historyDataSensor.toString() + "sau fetch data")
+
+                    state.isLoading = false
 
 
                 } else {
@@ -67,9 +60,10 @@ class HistoryPageViewModel : ViewModel() {
                         historyDataSensor = emptyList(),
                         pagination = PaginationObject(1, 25, null, null, null)
                     )
-                    Log.d("DevicePage", "da update state")
+                    state.isLoading = false
+
                 }
-                Log.d("DevicePage", state.historyDataSensor.toString())
+
             } catch (e: Exception) {
                 Log.d("DevicePageViewModel", e.toString())
 
@@ -77,12 +71,9 @@ class HistoryPageViewModel : ViewModel() {
 
 
         }
-        //   Log.d("DevicePage", state.historyDevice.toString())
+
     }
 
-    override fun onCleared() {
-        super.onCleared()
-    }
 
     data class ScreenState(
         var historyDataSensor: List<SensorData> = emptyList(),

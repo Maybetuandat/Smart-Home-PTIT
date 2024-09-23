@@ -1,6 +1,10 @@
 package com.example.smarthomeptit
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
@@ -23,7 +27,20 @@ fun NavigationHost(viewModel: HomeViewModel, modifier: Modifier, navController: 
     ) {
         composable(BottomNavItem.Home.route)
         {
-            HomePage(viewModel)
+            if(viewModel.isChartLoading)
+            {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator() // Hiển thị biểu tượng loading
+                }
+            }
+            else
+            {
+                HomePage(viewModel)
+            }
+
         }
         composable(BottomNavItem.Device.route)
         {

@@ -86,6 +86,7 @@ fun DevicePage() {
 
     val viewModel = viewModel<DeviePageViewModel>()
     viewModel.state.focusManager = LocalFocusManager.current
+
     val focusRequester = remember {
         FocusRequester()
     }
@@ -142,7 +143,23 @@ fun DevicePage() {
                 .weight(10f)
                 .padding(top = 15.dp)
         ) {
-            TableHistoryDevice(viewModel)   // bảng thể hiện giá trị
+
+            if(viewModel.state.isLoading)
+            {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator() // Hiển thị biểu tượng loading
+                }
+            }
+            else
+            {
+                TableHistoryDevice(viewModel)
+            }
+
+
+
         }
         if (showBottomSelectedSearch) {
             val typeOfSearchOptionsDevicePage = listOf(
@@ -289,113 +306,126 @@ fun TableHistoryDevice(
     viewModel: DeviePageViewModel
 ) {
 
-    var historyDevices = viewModel.state.historyDevice
-   // Log.d("DevicePage", historyDevices.toString() + "view")
-    var state = viewModel.state
-    val fonsize = 15.sp
-    Card(
-        modifier = Modifier
-            .padding(horizontal = 20.dp)
-            .padding(bottom = 20.dp),
-        shape = RoundedCornerShape(16.dp), // Hình dạng bo tròn của box
-        colors = CardDefaults.cardColors(containerColor = Color.White),
-        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
-
-    ) {
-
-        LazyColumn(
+    Log.d("testloading", viewModel.state.isLoading.toString())
+    if(viewModel.state.isLoading)
+    {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            CircularProgressIndicator()
+        }
+    }
+    else
+    {
+        var historyDevices = viewModel.state.historyDevice
+        // Log.d("DevicePage", historyDevices.toString() + "view")
+        var state = viewModel.state
+        val fonsize = 15.sp
+        Card(
             modifier = Modifier
-                .padding(vertical = 20.dp)
-                .padding(end = 10.dp)
+                .padding(horizontal = 20.dp)
+                .padding(bottom = 20.dp),
+            shape = RoundedCornerShape(16.dp), // Hình dạng bo tròn của box
+            colors = CardDefaults.cardColors(containerColor = Color.White),
+            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+
         ) {
 
-            item {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 10.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Box(modifier = Modifier.weight(0.5f), contentAlignment = Alignment.Center) {
-                        Text(text = "Id", fontWeight = FontWeight.Bold)
-                    }
-                    Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
-                        Text(text = "Device", fontWeight = FontWeight.Bold)
-                    }
-                    Box(modifier = Modifier.weight(0.5f), contentAlignment = Alignment.Center) {
-                        Text(text = "Status", fontWeight = FontWeight.Bold)
-                    }
-                    Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
-                        Text(text = "Time", fontWeight = FontWeight.Bold)
-                    }
-                }
-                Divider(
-                    color = Color.LightGray.copy(alpha = 0.5f),
-                    thickness = 1.dp
-                )
-            }
-            if (historyDevices.isEmpty()) {
-                item {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(top = 40.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(text = "No data")
-                    }
-                }
-            } else {
-                itemsIndexed(historyDevices) { index, item ->
-                    if (index >= state.historyDevice.size - 1 && !state.endReach && !state.isLoading) {
-                        state.pagination.current_page += 1
-                        viewModel.fetchHistoryDevice()
-                    }
-                    Row(
-                        modifier = Modifier.padding(vertical = 10.dp),
-                        horizontalArrangement = Arrangement.SpaceEvenly
-                    ) {
-                        Box(modifier = Modifier.weight(0.5f), contentAlignment = Alignment.Center) {
-                            Text(text = item.Id.toString(), fontSize = fonsize)
-                        }
-                        Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
-                            Text(text = item.Device, fontSize = fonsize)
-                        }
-                        Box(modifier = Modifier.weight(0.5f), contentAlignment = Alignment.Center) {
-                            Text(text = item.Status, fontSize = fonsize)
-                        }
-                        Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
-                            Text(text = formatDateToString(item.Time), fontSize = fonsize)
-                        }
+            LazyColumn(
+                modifier = Modifier
+                    .padding(vertical = 20.dp)
+                    .padding(end = 10.dp)
+            ) {
 
+                item {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 10.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Box(modifier = Modifier.weight(0.5f), contentAlignment = Alignment.Center) {
+                            Text(text = "Id", fontWeight = FontWeight.Bold)
+                        }
+                        Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
+                            Text(text = "Device", fontWeight = FontWeight.Bold)
+                        }
+                        Box(modifier = Modifier.weight(0.5f), contentAlignment = Alignment.Center) {
+                            Text(text = "Status", fontWeight = FontWeight.Bold)
+                        }
+                        Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
+                            Text(text = "Time", fontWeight = FontWeight.Bold)
+                        }
                     }
                     Divider(
                         color = Color.LightGray.copy(alpha = 0.5f),
                         thickness = 1.dp
                     )
                 }
-                if (state.isLoading == true) {
-                    item()
-                    {
-                        Row(
-                            Modifier
-                                .fillMaxWidth()
-                                .padding(8.dp),
-                            horizontalArrangement = Arrangement.Center,
-                            verticalAlignment = Alignment.CenterVertically
+                if (historyDevices.isEmpty()) {
+                    item {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(top = 40.dp),
+                            contentAlignment = Alignment.Center
                         ) {
-                            CircularProgressIndicator(color = ProgressIndicatorDefaults.circularColor)
-                        }
-                        if (!state.error.isNullOrEmpty()) {
-                            Toast.makeText(LocalContext.current, state.error, Toast.LENGTH_SHORT)
-                                .show()
+                            Text(text = "No data")
                         }
                     }
+                } else {
+                    itemsIndexed(historyDevices) { index, item ->
+                        if (index >= state.historyDevice.size - 1 && !state.endReach && !state.isLoading) {
+                            state.pagination.current_page += 1
+                            viewModel.fetchHistoryDevice()
+                        }
+                        Row(
+                            modifier = Modifier.padding(vertical = 10.dp),
+                            horizontalArrangement = Arrangement.SpaceEvenly
+                        ) {
+                            Box(modifier = Modifier.weight(0.5f), contentAlignment = Alignment.Center) {
+                                Text(text = item.Id.toString(), fontSize = fonsize)
+                            }
+                            Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
+                                Text(text = item.Device, fontSize = fonsize)
+                            }
+                            Box(modifier = Modifier.weight(0.5f), contentAlignment = Alignment.Center) {
+                                Text(text = item.Status, fontSize = fonsize)
+                            }
+                            Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
+                                Text(text = formatDateToString(item.Time), fontSize = fonsize)
+                            }
+
+                        }
+                        Divider(
+                            color = Color.LightGray.copy(alpha = 0.5f),
+                            thickness = 1.dp
+                        )
+                    }
+                    if (state.isLoading == true) {
+                        item()
+                        {
+                            Row(
+                                Modifier
+                                    .fillMaxWidth()
+                                    .padding(8.dp),
+                                horizontalArrangement = Arrangement.Center,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                CircularProgressIndicator(color = ProgressIndicatorDefaults.circularColor)
+                            }
+                            if (!state.error.isNullOrEmpty()) {
+                                Toast.makeText(LocalContext.current, state.error, Toast.LENGTH_SHORT)
+                                    .show()
+                            }
+                        }
+                    }
+
+
                 }
 
-
             }
-
         }
     }
 }
