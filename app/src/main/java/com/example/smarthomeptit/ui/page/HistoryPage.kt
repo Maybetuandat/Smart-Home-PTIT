@@ -22,6 +22,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.IconButton
 import androidx.compose.material.TabRowDefaults.Divider
@@ -364,19 +365,33 @@ fun SensorHistory(viewModel: HistoryPageViewModel) {
                         horizontalArrangement = Arrangement.SpaceEvenly
                     ) {
                         Box(modifier = Modifier.weight(0.5f), contentAlignment = Alignment.Center) {
-                            Text(text = item.Id.toString(), fontSize = fonsize)
+                            SelectionContainer {
+                                Text(text = item.Id.toString(), fontSize = fonsize)
+                            }
                         }
                         Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
-                            Text(text = item.Temperature.toString(), fontSize = fonsize)
+                            SelectionContainer {
+                                Text(text = item.Temperature.toString(), fontSize = fonsize)
+                            }
+
                         }
                         Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
-                            Text(text = item.Humidity.toString(), fontSize = fonsize)
+
+                            SelectionContainer {
+                                Text(text = item.Humidity.toString(), fontSize = fonsize)
+                            }
                         }
                         Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
-                            Text(text = item.Light.toString(), fontSize = fonsize)
+                            SelectionContainer {
+                                Text(text = item.Light.toString(), fontSize = fonsize)
+                            }
+
                         }
                         Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
-                            Text(text = formatDateToString(item.Time), fontSize = fonsize)
+
+                            SelectionContainer {
+                                Text(text = formatDateToString(item.Time), fontSize = fonsize)
+                            }
                         }
                     }
                     Divider(

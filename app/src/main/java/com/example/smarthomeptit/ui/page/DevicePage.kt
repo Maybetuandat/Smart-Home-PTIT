@@ -23,6 +23,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.IconButton
 import androidx.compose.material.TabRowDefaults.Divider
@@ -385,16 +386,25 @@ fun TableHistoryDevice(
                             horizontalArrangement = Arrangement.SpaceEvenly
                         ) {
                             Box(modifier = Modifier.weight(0.5f), contentAlignment = Alignment.Center) {
-                                Text(text = item.Id.toString(), fontSize = fonsize)
+
+                               SelectionContainer {
+                                   Text(text = item.Id.toString(), fontSize = fonsize)
+                               }
                             }
                             Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
-                                Text(text = item.Device, fontSize = fonsize)
+                                SelectionContainer {
+                                    Text(text = item.Device, fontSize = fonsize)
+                                }
                             }
                             Box(modifier = Modifier.weight(0.5f), contentAlignment = Alignment.Center) {
-                                Text(text = item.Status, fontSize = fonsize)
+                                SelectionContainer {
+                                    Text(text = item.Status, fontSize = fonsize)
+                                }
                             }
                             Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
-                                Text(text = formatDateToString(item.Time), fontSize = fonsize)
+                                SelectionContainer {
+                                    Text(text = formatDateToString(item.Time), fontSize = fonsize)
+                                }
                             }
 
                         }
