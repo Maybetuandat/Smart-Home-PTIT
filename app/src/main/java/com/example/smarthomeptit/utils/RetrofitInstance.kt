@@ -13,4 +13,5 @@ object RetrofitInstance {
             .create(ApiInterface::class.java)
     }
     const val url = "http://192.168.2.7:9999"
+    const val urlApiDocs = url + "/api-docs/"
 }
