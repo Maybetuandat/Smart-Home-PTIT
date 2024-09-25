@@ -318,6 +318,9 @@ fun SensorHistory(viewModel: HistoryPageViewModel) {
                         Text(text = "Humidity", fontSize = fonsize, fontWeight = FontWeight.Bold)
                     }
                     Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
+                        Text(text = "Dust", fontSize = fonsize, fontWeight = FontWeight.Bold)
+                    }
+                    Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
                         Text(
                             text = "Light",
                             fontSize = fonsize,
@@ -371,6 +374,9 @@ fun SensorHistory(viewModel: HistoryPageViewModel) {
                         }
                         Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
                             Text(text = item.Humidity.toString(), fontSize = fonsize)
+                        }
+                        Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
+                            Text(text = item.dust.toString(), fontSize = fonsize)
                         }
                         Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
                             Text(text = item.Light.toString(), fontSize = fonsize)

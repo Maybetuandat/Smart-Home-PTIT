@@ -51,7 +51,7 @@ class HistoryPageViewModel : ViewModel() {
                         pagination = response.body()?.meta!!,
                         endReach = state.pagination.current_page == response.body()?.meta?.total_page,
                     )
-
+                    Log.d("DevicePageViewModel", state.historyDataSensor.toString())
                     state.isLoading = false
 
 

@@ -70,6 +70,8 @@ fun HomePage(viewModel: HomeViewModel) {
     val temperature by viewModel.temperature.observeAsState(initial = "32")
     val humidity by viewModel.humidity.observeAsState(initial = "70")
     val light by viewModel.light.observeAsState(initial = "1000")
+    val dust by viewModel.dust.observeAsState(initial = "300")
+
     val dustStatus by viewModel.dustStatus.observeAsState(initial = 0)
     val fanStatus by viewModel.fanStatus.observeAsState(initial = 0)
     val ledStatus by viewModel.ledStatus.observeAsState(initial = 0)
@@ -134,7 +136,7 @@ fun HomePage(viewModel: HomeViewModel) {
                         .weight(1f)
 
                 ) {
-                    HomeStatus(temperature, humidity, light)
+                    HomeStatus(temperature, humidity, light, dust)
                 }
                 LazyColumn(
                     modifier = Modifier
@@ -488,7 +490,7 @@ fun DeviceSplitTwo(
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun HomeStatus(temperature: String, humidity: String, light: String) {
+fun HomeStatus(temperature: String, humidity: String, light: String, dust : String) {
     val colorTemperature = if (temperature.toFloat() > 30) Red else iconselectedcolor
     val colorHumidity = if (humidity.toFloat() > 50) iconselectedcolor else iconunselectedcolor
     val colorLight = if (light.toFloat() > 1000) LightColor else iconunselectedcolor
@@ -545,6 +547,20 @@ fun HomeStatus(temperature: String, humidity: String, light: String) {
                     )
                 )
             }
+            Box(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .weight(1f)
+            )
+            {
+                HomeStatusItem(
+                    Item = ItemStatus(
+                        "Độ bụi",
+                        R.drawable.icon_dust,
+                        "${dust} pm", colorLight
+                    )
+                )
+            }
 
         }
     }
@@ -598,7 +614,7 @@ data class ItemStatus(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DropDown(viewModel: HomeViewModel) {
-    val list = listOf("Temperature", "Humidity", "Light")
+    val list = listOf("Temperature", "Humidity", "Light", "Dust")
 
 
 //    var selectedText by remember {
@@ -690,6 +706,9 @@ fun Chart(viewModel: HomeViewModel) {
 
             "Light" -> {
                 listData = viewModel.listLight
+            }
+            "Dust"->{
+                listData = viewModel.listDust
             }
         }
         if(listData.isEmpty())

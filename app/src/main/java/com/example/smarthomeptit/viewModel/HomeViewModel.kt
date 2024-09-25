@@ -21,6 +21,7 @@ class HomeViewModel : ViewModel() {
     var listTemperature by mutableStateOf(mutableListOf<Double>())
     var listHumidity by mutableStateOf(mutableListOf<Double>())
     var listLight by mutableStateOf(mutableListOf<Double>())
+    var listDust by mutableStateOf(mutableListOf<Double>())
     var isChartLoading by mutableStateOf(false)
 
 
@@ -31,6 +32,10 @@ class HomeViewModel : ViewModel() {
     val humidity: LiveData<String> = _humidity
     private val _light = MutableLiveData<String>()
     val light: LiveData<String> = _light
+    private val _dust = MutableLiveData<String>()
+    val dust :LiveData<String> = _dust
+
+    // for status
 
     private val _dustStatus = MutableLiveData<Int>()
     val dustStatus: LiveData<Int> = _dustStatus
@@ -46,15 +51,19 @@ class HomeViewModel : ViewModel() {
             _temperature.value = data[0]
             _humidity.value = data[1]
             _light.value = data[2]
+            _dust.value = data[3]
             listTemperature.add(listTemperature.size , data[0].toDouble())
             listHumidity.add(listHumidity.size , data[1].toDouble())
             listLight.add(listLight.size , data[2].toDouble())
+            listDust.add(listDust.size , data[3].toDouble())
             if (listTemperature.size > 10)
                 listTemperature.removeAt(0)
             if (listHumidity.size > 10)
                 listHumidity.removeAt(0)
             if (listLight.size > 10)
                 listLight.removeAt(0)
+            if(listDust.size > 10)
+                listDust.removeAt(0)
         }
     }
 
@@ -108,6 +117,7 @@ class HomeViewModel : ViewModel() {
                 listTemperature = mutableListOf(10.0, 20.0, 30.0, 40.0, 45.0, 10.0, 20.0, 30.0, 40.0, 45.0)
                 listLight = mutableListOf(100.0,1500.0, 3300.0, 3493.0, 4000.0, 100.0,1500.0, 3300.0, 3493.0, 4000.0)
                 listHumidity = mutableListOf(30.0, 50.0, 60.0, 70.0, 80.0,30.0, 50.0, 60.0, 70.0, 80.0)
+                listDust = mutableListOf(30.0, 50.0, 60.0, 70.0, 80.0,30.0, 50.0, 60.0, 70.0, 80.0)
                 isChartLoading = false
 
 
