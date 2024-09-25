@@ -7,10 +7,11 @@ import com.example.smarthomeptit.data.model.ResponseDevicePage
 import com.example.smarthomeptit.data.model.ResponseHistoryPage
 import retrofit2.Response
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.Query
 
 interface ApiInterface {
-    @GET("/api/device_controller")
+    @POST("/api/device_controller")
     suspend fun controlDeviceLed(
         @Query("parameter") parameter: Int,
         @Query("id") id: Int
@@ -36,9 +37,7 @@ interface ApiInterface {
         @Query("pageSize") pageSize: Int,
     ): Response<ResponseHistoryPage>
     @GET("/api/get_history_data_sensor_for_chart")
-    suspend fun getHistoryDataSensorForChart(
-        @Query("key") key : String
-    ):Response<List<ResponseDataForChart>>
+    suspend fun getHistoryDataSensorForChart():Response<List<ResponseDataForChart>>
 
 
 }

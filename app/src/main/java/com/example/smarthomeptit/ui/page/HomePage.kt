@@ -655,7 +655,7 @@ fun Chart(viewModel: HomeViewModel) {
                     linesParameters = testLineParameters,
                     isGrid = true,
                     gridColor = Color.Gray,
-                    xAxisData = listOf("0", "1", "2", "3", "4"),
+                    xAxisData = listOf("0", "1", "2", "3", "4","5", "6", "7", "8", "9"),
                     animateChart = true,
                     showGridWithSpacer = true,
                     yAxisStyle = TextStyle(

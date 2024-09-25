@@ -1,5 +1,7 @@
 package com.example.smarthomeptit.data.model
 
 data class ResponseDataForChart(
-    val data : Double
+    val Temperature : Double,
+    val Humidity : Double,
+    val Light : Double,
 )

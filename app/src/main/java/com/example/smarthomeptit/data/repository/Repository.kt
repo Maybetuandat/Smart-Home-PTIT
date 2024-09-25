@@ -21,8 +21,8 @@ class Repository {
     {
         return RetrofitInstance.api.getHistoryDataSensor(value, typeSearch, typeSort,sort, page, pageSize)
     }
-    suspend fun getHistoryDataSensorForChart(key : String):Response<List<ResponseDataForChart>>
+    suspend fun getHistoryDataSensorForChart():Response<List<ResponseDataForChart>>
     {
-        return RetrofitInstance.api.getHistoryDataSensorForChart(key)
+        return RetrofitInstance.api.getHistoryDataSensorForChart()
     }
 }
