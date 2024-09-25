@@ -49,6 +49,7 @@ class SocketManager {
     private val statusLed = "led_status"
     private val statusFan = "fan_status"
     private val statusAirConditioner = "air_conditioner_status"
+    private val statusDust = "dust_status"
     fun onMessageReceived(listener: (event :String, message : String) -> Unit) {
         socket?.on(dataSensor) { args ->
             val message = args[0] as String
@@ -66,6 +67,10 @@ class SocketManager {
         socket?.on(statusAirConditioner){args ->
             val message = args[0] as String
             listener.invoke(statusAirConditioner,message)
+        }
+        socket?.on(statusDust){args ->
+            val message = args[0] as String
+            listener.invoke(statusDust,message)
         }
     }
 

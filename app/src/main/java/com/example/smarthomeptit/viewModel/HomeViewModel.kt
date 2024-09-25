@@ -32,6 +32,8 @@ class HomeViewModel : ViewModel() {
     private val _light = MutableLiveData<String>()
     val light: LiveData<String> = _light
 
+    private val _dustStatus = MutableLiveData<Int>()
+    val dustStatus: LiveData<Int> = _dustStatus
     private val _ledStatus = MutableLiveData<Int>()
     val ledStatus: LiveData<Int> = _ledStatus
     private val _fanStatus = MutableLiveData<Int>()
@@ -72,6 +74,11 @@ class HomeViewModel : ViewModel() {
     fun updateAirConditionerStatus(status: Int) {
         viewModelScope.launch {
             _airConditionerStatus.value = status
+        }
+    }
+    fun updateDustStatus(status: Int) {
+        viewModelScope.launch {
+            _dustStatus.value = status
         }
     }
 

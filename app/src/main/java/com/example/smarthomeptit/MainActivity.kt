@@ -16,6 +16,7 @@ class MainActivity : ComponentActivity() {
     private val statusLed = "led_status"
     private val statusFan = "fan_status"
     private val statusAirConditioner = "air_conditioner_status"
+    private val statusDust = "dust_status"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -36,6 +37,7 @@ class MainActivity : ComponentActivity() {
                 statusLed -> viewHomeViewModel.updateLedStatus(message.toInt())
                 statusFan -> viewHomeViewModel.updateFanStatus(message.toInt())
                 statusAirConditioner -> viewHomeViewModel.updateAirConditionerStatus(message.toInt())
+                statusDust -> viewHomeViewModel.updateDustStatus(message.toInt())
 
             }
 

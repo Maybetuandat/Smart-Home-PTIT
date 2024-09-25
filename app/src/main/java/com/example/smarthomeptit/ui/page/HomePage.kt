@@ -70,8 +70,9 @@ fun HomePage(viewModel: HomeViewModel) {
     val temperature by viewModel.temperature.observeAsState(initial = "32")
     val humidity by viewModel.humidity.observeAsState(initial = "70")
     val light by viewModel.light.observeAsState(initial = "1000")
-    val ledStatus by viewModel.ledStatus.observeAsState(initial = 0)
+    val dustStatus by viewModel.dustStatus.observeAsState(initial = 0)
     val fanStatus by viewModel.fanStatus.observeAsState(initial = 0)
+    val ledStatus by viewModel.ledStatus.observeAsState(initial = 0)
     val airConditionerStatus by viewModel.airConditionerStatus.observeAsState(initial = 0)
     Column(
         modifier = Modifier
@@ -147,7 +148,7 @@ fun HomePage(viewModel: HomeViewModel) {
                     }
 
 
-                    item { DeviceSwitch(controlDevice, ledStatus, fanStatus, airConditionerStatus) }
+                    item { DeviceSwitch(controlDevice, ledStatus, fanStatus, airConditionerStatus, dustStatus) }
                 }
             }
 
@@ -166,16 +167,17 @@ data class DeviceController(
 fun DeviceSwitch(
     controlDevice: (ac: Int, id: Int) -> Unit,
 
-    lightStatus: Int,
+    ledStatus: Int,
     fanStatus: Int,
     airConditionerStatus: Int,
-    ledStatus: Int
+    dustStatus : Int
+
 ) {
     val itemList = mutableListOf(
         DeviceController("Fan", R.drawable.icon_fan_device),
         DeviceController("Light", R.drawable.icon_light_device),
         DeviceController("Smart AirConditioner", R.drawable.aircondition_icon),
-        DeviceController("Led", R.drawable.icon_led),
+        DeviceController("Dust", R.drawable.icon_led),
 
     )
     Column(modifier = Modifier
@@ -205,7 +207,7 @@ fun DeviceSwitch(
                     .padding(horizontal = 10.dp)
             )
             {
-                DeviceSplitTwo(itemList[1], controlDevice, lightStatus, "led")
+                DeviceSplitTwo(itemList[1], controlDevice, ledStatus, "light")
             }
         }
         Row(
@@ -232,7 +234,7 @@ fun DeviceSwitch(
                     .padding(horizontal = 10.dp)
             )
             {
-                DeviceSplitTwo(itemList[3], controlDevice, ledStatus, "led")
+                DeviceSplitTwo(itemList[3], controlDevice, dustStatus, "dust")
             }
         }
 //        Box(
@@ -336,9 +338,9 @@ fun DeviceSplitTwo(
     type: String
 ) {
 
-    val id : Int
+    var id : Int = 0
     when(type){
-        "led" -> {
+        "light" -> {
             id = 1
         }
         "fan" -> {
@@ -347,7 +349,7 @@ fun DeviceSplitTwo(
         "air conditioner" ->{
             id = 3
         }
-        "led" ->{
+        "dust" ->{
             id = 4
         }
     }
@@ -361,6 +363,8 @@ fun DeviceSplitTwo(
     )
     var colorFan = if (status == 1) iconselectedcolor else iconunselectedcolor
     var colorLight = if (status == 1) LightColor else iconunselectedcolor
+    var colorAirConditioner = if (status == 1) iconselectedcolor else iconunselectedcolor
+    var colorDust = if (status == 1) LightColor else iconunselectedcolor
     Card(
         modifier = Modifier
             .height(150.dp)
@@ -406,11 +410,33 @@ fun DeviceSplitTwo(
                             )
                         }
 
-                    } else {
+                    } else if(type == "light") {
                         Icon(
                             painter = painterResource(id = item.icon),
                             contentDescription = item.label,
                             tint = colorLight,
+                            modifier = Modifier
+                                .height(45.dp)
+                                .width(45.dp)
+                        )
+                    }
+                    else if(type == "dust")
+                    {
+                        Icon(
+                            painter = painterResource(id = item.icon),
+                            contentDescription = item.label,
+                            tint = colorDust,
+                            modifier = Modifier
+                                .height(45.dp)
+                                .width(45.dp)
+                        )
+                    }
+                    else if(type == "air conditioner")
+                    {
+                        Icon(
+                            painter = painterResource(id = item.icon),
+                            contentDescription = item.label,
+                            tint = colorAirConditioner,
                             modifier = Modifier
                                 .height(45.dp)
                                 .width(45.dp)
