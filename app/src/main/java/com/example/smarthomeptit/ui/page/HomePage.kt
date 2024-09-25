@@ -166,14 +166,17 @@ data class DeviceController(
 fun DeviceSwitch(
     controlDevice: (ac: Int, id: Int) -> Unit,
 
-    ledStatus: Int,
+    lightStatus: Int,
     fanStatus: Int,
-    airConditionerStatus: Int
+    airConditionerStatus: Int,
+    ledStatus: Int
 ) {
     val itemList = mutableListOf(
         DeviceController("Fan", R.drawable.icon_fan_device),
         DeviceController("Light", R.drawable.icon_light_device),
-        DeviceController("Smart AirConditioner", R.drawable.aircondition_icon)
+        DeviceController("Smart AirConditioner", R.drawable.aircondition_icon),
+        DeviceController("Led", R.drawable.icon_led),
+
     )
     Column(modifier = Modifier
         .height(300.dp)
@@ -202,19 +205,46 @@ fun DeviceSwitch(
                     .padding(horizontal = 10.dp)
             )
             {
-                DeviceSplitTwo(itemList[1], controlDevice, ledStatus, "led")
+                DeviceSplitTwo(itemList[1], controlDevice, lightStatus, "led")
             }
         }
-        Box(
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f)
-                .padding(horizontal = 10.dp)
-                .padding(bottom = 10.dp)
-        )
-        {
-            DeviceSplitOne(itemList[2], controlDevice, airConditionerStatus)
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .weight(1f)
+                    .padding(bottom = 10.dp)
+                    .padding(start = 10.dp)
+
+            )
+            {
+                DeviceSplitTwo(itemList[2], controlDevice, airConditionerStatus, "air conditioner")
+            }
+            Box(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .weight(1f)
+                    .padding(bottom = 10.dp)
+                    .padding(horizontal = 10.dp)
+            )
+            {
+                DeviceSplitTwo(itemList[3], controlDevice, ledStatus, "led")
+            }
         }
+//        Box(
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .weight(1f)
+//                .padding(horizontal = 10.dp)
+//                .padding(bottom = 10.dp)
+//        )
+//        {
+//            DeviceSplitOne(itemList[2], controlDevice, airConditionerStatus)
+//        }
     }
 }
 
@@ -306,7 +336,21 @@ fun DeviceSplitTwo(
     type: String
 ) {
 
-    val id: Int = if (type == "led") 1 else 2
+    val id : Int
+    when(type){
+        "led" -> {
+            id = 1
+        }
+        "fan" -> {
+            id = 2
+        }
+        "air conditioner" ->{
+            id = 3
+        }
+        "led" ->{
+            id = 4
+        }
+    }
     val infiniteTransition = rememberInfiniteTransition()
     val rotation by infiniteTransition.animateFloat(
         initialValue = 0f,
@@ -655,7 +699,7 @@ fun Chart(viewModel: HomeViewModel) {
                     linesParameters = testLineParameters,
                     isGrid = true,
                     gridColor = Color.Gray,
-                    xAxisData = listOf("0", "1", "2", "3", "4"),
+                    xAxisData = listOf("0", "1", "2", "3", "4", "5", "6", "7", "8", "9"),
                     animateChart = true,
                     showGridWithSpacer = true,
                     yAxisStyle = TextStyle(

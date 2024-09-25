@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Smart Home PTIT</string>
     <string name="source_code">https://github.com/Maybetuandat/Smart-Home-PTIT</string>
-    <string name="bao_cao_pdf">https://docs.google.com/document/d/16-gydmGhiTknuFnFHb6-AUoCfihRSgY6_tDa6welIRM/edit</string>
+    <string name="bao_cao_pdf">https://drive.google.com/file/d/1Qbzm9QXWwoLaf96k04INevVvNvalt2Yi/view?usp=sharing</string>
+    <string name="api_docs"></string>
 </resources>

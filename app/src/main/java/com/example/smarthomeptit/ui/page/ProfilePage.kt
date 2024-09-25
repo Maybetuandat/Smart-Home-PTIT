@@ -47,6 +47,7 @@ import com.example.smarthomeptit.R
 import com.example.smarthomeptit.ui.theme.BackgroundColor
 import com.example.smarthomeptit.ui.theme.Black
 import com.example.smarthomeptit.ui.theme.iconunselectedcolor
+import com.example.smarthomeptit.utils.RetrofitInstance
 
 @Composable
 fun ProfilePage() {
@@ -267,7 +268,7 @@ fun describle() {
                         )
                         Text(text = "Api docs", fontSize = 20.sp, modifier = Modifier.clickable {  val intent = Intent(
                             Intent.ACTION_VIEW,
-                            Uri.parse(context.getString(R.string.source_code))
+                            Uri.parse(RetrofitInstance.urlApiDocs)
                         )
                             context.startActivity(intent) })
                     }

@@ -47,11 +47,11 @@ class HomeViewModel : ViewModel() {
             listTemperature.add(listTemperature.size , data[0].toDouble())
             listHumidity.add(listHumidity.size , data[1].toDouble())
             listLight.add(listLight.size , data[2].toDouble())
-            if (listTemperature.size > 5)
+            if (listTemperature.size > 10)
                 listTemperature.removeAt(0)
-            if (listHumidity.size > 5)
+            if (listHumidity.size > 10)
                 listHumidity.removeAt(0)
-            if (listLight.size > 5)
+            if (listLight.size > 10)
                 listLight.removeAt(0)
         }
     }
@@ -84,20 +84,24 @@ class HomeViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 isChartLoading = true
-                val tempResponse = repository.getHistoryDataSensorForChart("Temperature")
-                val humidityResponse = repository.getHistoryDataSensorForChart("Humidity")
-                val lightResponse = repository.getHistoryDataSensorForChart("Light")
-                listTemperature = mutableListOf(10.0, 20.0, 30.0, 40.0, 45.0)
-                listLight = mutableListOf(100.0,1500.0, 3300.0, 3493.0, 4000.0)
-                listHumidity = mutableListOf(30.0, 50.0, 60.0, 70.0, 80.0)
+                val response = repository.getHistoryDataSensorForChart()
 
-                // Đảm bảo rằng cả ba danh sách đã được tải
-                if (tempResponse.isSuccessful && humidityResponse.isSuccessful && lightResponse.isSuccessful) {
-                    isChartLoading = false
-                    Log.d("HomeModel", listTemperature.toString())
-                    Log.d("HomeModel", listHumidity.toString())
-                    Log.d("HomeModel", listLight.toString())
-                }
+
+//                if(response.isSuccessful)
+//                {
+//                    val data = response.body()
+//                    data!!.forEach {
+//                        listTemperature.add(it.Temperature)
+//                        listHumidity.add(it.Humidity)
+//                        listLight.add(it.Light)
+//                    }
+//                    Log.d("HomeModel", data.toString())
+//                    isChartLoading = false
+//                }
+                listTemperature = mutableListOf(10.0, 20.0, 30.0, 40.0, 45.0, 10.0, 20.0, 30.0, 40.0, 45.0)
+                listLight = mutableListOf(100.0,1500.0, 3300.0, 3493.0, 4000.0, 100.0,1500.0, 3300.0, 3493.0, 4000.0)
+                listHumidity = mutableListOf(30.0, 50.0, 60.0, 70.0, 80.0,30.0, 50.0, 60.0, 70.0, 80.0)
+                isChartLoading = false
 
 
             } catch (e: Exception) {
