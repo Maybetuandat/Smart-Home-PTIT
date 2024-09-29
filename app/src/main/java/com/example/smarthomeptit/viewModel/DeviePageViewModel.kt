@@ -20,6 +20,7 @@ class DeviePageViewModel : ViewModel() {
 
     init {
         fetchHistoryDevice()
+        getFan()
     }
 
     fun updateFetchHistoryDevice() {
@@ -31,6 +32,22 @@ class DeviePageViewModel : ViewModel() {
         Log.d("DevicePage", state.typeSearch)
         Log.d("DevicePage", state.historyDevice.toString())
         fetchHistoryDevice()
+    }
+
+    fun getFan()
+    {
+        viewModelScope.launch {
+            try {
+                var response = repository.getFan()
+                if (response.isSuccessful) {
+                    state.turnOn = response.body()!!.data
+                }
+            } catch (e : Exception)
+            {
+                Log.d("maybe", e.toString())
+            }
+
+        }
     }
 
     fun fetchHistoryDevice(
@@ -95,6 +112,7 @@ class DeviePageViewModel : ViewModel() {
         var endReach: Boolean = false,
         val error: String? = null,
         var signal: Int = 1,
+        var turnOn : Int = 0,
         val pagination: PaginationObject = PaginationObject(1, 25, null, null, null)
     )
 }

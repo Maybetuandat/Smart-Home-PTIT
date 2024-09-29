@@ -228,7 +228,7 @@ fun describle() {
                     {
                         Icon(
                             painter = painterResource(id = R.drawable.icon_git),
-                            contentDescription = "source code",
+                            contentDescription = "student card",
                             modifier = Modifier
                                 .size(50.dp)
                                 .padding(end = 20.dp),
@@ -268,7 +268,7 @@ fun describle() {
                         )
                         Text(text = "Api docs", fontSize = 20.sp, modifier = Modifier.clickable {  val intent = Intent(
                             Intent.ACTION_VIEW,
-                            Uri.parse(RetrofitInstance.url + "/api-docs")
+                            Uri.parse(RetrofitInstance.urlApiDocs)
                         )
                             context.startActivity(intent) })
                     }

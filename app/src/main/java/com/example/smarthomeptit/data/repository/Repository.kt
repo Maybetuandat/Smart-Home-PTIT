@@ -3,6 +3,7 @@ package com.example.smarthomeptit.data.repository
 
 import com.example.smarthomeptit.data.model.ResponseBody
 import com.example.smarthomeptit.data.model.ResponseDataForChart
+import com.example.smarthomeptit.data.model.ResponseDataWind
 import com.example.smarthomeptit.data.model.ResponseDevicePage
 import com.example.smarthomeptit.data.model.ResponseHistoryPage
 import com.example.smarthomeptit.utils.RetrofitInstance
@@ -25,4 +26,13 @@ class Repository {
     {
         return RetrofitInstance.api.getHistoryDataSensorForChart()
     }
+    suspend fun getWind():Response<ResponseDataWind>
+    {
+        return  RetrofitInstance.api.getWind()
+    }
+    suspend fun getFan():Response<ResponseDataWind>
+    {
+        return  RetrofitInstance.api.getFan()
+    }
+
 }

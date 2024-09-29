@@ -87,7 +87,7 @@ fun DevicePage() {
 
     val viewModel = viewModel<DeviePageViewModel>()
     viewModel.state.focusManager = LocalFocusManager.current
-
+    viewModel.getFan()
     val focusRequester = remember {
         FocusRequester()
     }
@@ -137,6 +137,12 @@ fun DevicePage() {
 
 
             )
+        }
+        Box(modifier = Modifier
+            .fillMaxWidth()
+            .height(30.dp), contentAlignment = Alignment.Center)
+        {
+            Text(text = "Số lần bật quạt trong ngày là :  " + viewModel.state.turnOn)
         }
         Box(
             modifier = Modifier

@@ -22,7 +22,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.IconButton
 import androidx.compose.material.TabRowDefaults.Divider
@@ -84,6 +83,7 @@ fun HistoryPage() {
 
     val viewModel = viewModel<HistoryPageViewModel>()
     viewModel.state.focusManager = LocalFocusManager.current
+    viewModel.getWind()
     val focusRequester = remember {
         FocusRequester()
     }
@@ -127,6 +127,15 @@ fun HistoryPage() {
             )
         }
 
+        Box(modifier = Modifier
+            .fillMaxWidth()
+            .height(30.dp),
+            contentAlignment = Alignment.Center
+        )
+        {
+
+            Text(text = "Số lần mà gió bé hơn 40 là : " + viewModel.state.Wind.toString())
+        }
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -151,7 +160,7 @@ fun HistoryPage() {
         }
         if (showBottomSelectedSearch) {
             val listOfOptionsSearchHistoryPage =
-                mutableListOf("Temperature", "Humidity", "Light", "Time")
+                mutableListOf("Temperature", "Humidity", "Light", "Time", "Wind")
             BottomSheetSearchHistoryPage(
                 sheetState = sheetState,
                 onDismissRequest = { showBottomSelectedSearch = false },
@@ -319,6 +328,9 @@ fun SensorHistory(viewModel: HistoryPageViewModel) {
                         Text(text = "Humidity", fontSize = fonsize, fontWeight = FontWeight.Bold)
                     }
                     Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
+                        Text(text = "Winds", fontSize = fonsize, fontWeight = FontWeight.Bold)
+                    }
+                    Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
                         Text(
                             text = "Light",
                             fontSize = fonsize,
@@ -365,33 +377,22 @@ fun SensorHistory(viewModel: HistoryPageViewModel) {
                         horizontalArrangement = Arrangement.SpaceEvenly
                     ) {
                         Box(modifier = Modifier.weight(0.5f), contentAlignment = Alignment.Center) {
-                            SelectionContainer {
-                                Text(text = item.Id.toString(), fontSize = fonsize)
-                            }
+                            Text(text = item.Id.toString(), fontSize = fonsize)
                         }
                         Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
-                            SelectionContainer {
-                                Text(text = item.Temperature.toString(), fontSize = fonsize)
-                            }
-
+                            Text(text = item.Temperature.toString(), fontSize = fonsize)
                         }
                         Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
-
-                            SelectionContainer {
-                                Text(text = item.Humidity.toString(), fontSize = fonsize)
-                            }
+                            Text(text = item.Humidity.toString(), fontSize = fonsize)
                         }
                         Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
-                            SelectionContainer {
-                                Text(text = item.Light.toString(), fontSize = fonsize)
-                            }
-
+                            Text(text = item.Wind.toString(), fontSize = fonsize)
                         }
                         Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
-
-                            SelectionContainer {
-                                Text(text = formatDateToString(item.Time), fontSize = fonsize)
-                            }
+                            Text(text = item.Light.toString(), fontSize = fonsize)
+                        }
+                        Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
+                            Text(text = formatDateToString(item.Time), fontSize = fonsize)
                         }
                     }
                     Divider(
@@ -528,7 +529,7 @@ fun FilterDeviceHistoryPage(
                     .padding(horizontal = 10.dp)
             )
             {
-                val listOfOptions = listOf("Temperature", "Humidity", "Light", "Time")
+                val listOfOptions = listOf("Temperature", "Humidity", "Light", "Time", "Wind")
                 DropDownOptionHistoryPage(listOfOptions, "Type", viewModel)
             }
 

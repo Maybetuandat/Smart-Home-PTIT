@@ -3,6 +3,7 @@ package com.example.smarthomeptit.data.api
 
 import com.example.smarthomeptit.data.model.ResponseBody
 import com.example.smarthomeptit.data.model.ResponseDataForChart
+import com.example.smarthomeptit.data.model.ResponseDataWind
 import com.example.smarthomeptit.data.model.ResponseDevicePage
 import com.example.smarthomeptit.data.model.ResponseHistoryPage
 import retrofit2.Response
@@ -39,5 +40,9 @@ interface ApiInterface {
     @GET("/api/get_history_data_sensor_for_chart")
     suspend fun getHistoryDataSensorForChart():Response<List<ResponseDataForChart>>
 
+    @GET("/api/wind")
+    suspend fun getWind():Response<ResponseDataWind>
+    @GET("/api/turn")
+    suspend fun getFan():Response<ResponseDataWind>
 
 }

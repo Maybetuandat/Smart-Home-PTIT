@@ -7,5 +7,6 @@ data class SensorData(
     val Temperature: Float,
     val Humidity: Float,
     val Light: Float,
+    val Wind : Int,
     val Time : Date
 )

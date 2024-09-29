@@ -70,8 +70,19 @@ fun HomePage(viewModel: HomeViewModel) {
     val temperature by viewModel.temperature.observeAsState(initial = "32")
     val humidity by viewModel.humidity.observeAsState(initial = "70")
     val light by viewModel.light.observeAsState(initial = "1000")
-    val ledStatus by viewModel.ledStatus.observeAsState(initial = 0)
+    val wind by viewModel.dust.observeAsState(initial = "100")
+
+
+    if(wind.toInt() < 40)
+    {
+        viewModel.controlDevice(1,2);
+    }else
+    {
+        viewModel.controlDevice(0,2)
+    }
+    val dustStatus by viewModel.dustStatus.observeAsState(initial = 0)
     val fanStatus by viewModel.fanStatus.observeAsState(initial = 0)
+    val ledStatus by viewModel.ledStatus.observeAsState(initial = 0)
     val airConditionerStatus by viewModel.airConditionerStatus.observeAsState(initial = 0)
     Column(
         modifier = Modifier
@@ -133,7 +144,7 @@ fun HomePage(viewModel: HomeViewModel) {
                         .weight(1f)
 
                 ) {
-                    HomeStatus(temperature, humidity, light)
+                    HomeStatus(temperature, humidity, light, wind)
                 }
                 LazyColumn(
                     modifier = Modifier
@@ -147,7 +158,7 @@ fun HomePage(viewModel: HomeViewModel) {
                     }
 
 
-                    item { DeviceSwitch(controlDevice, ledStatus, fanStatus, airConditionerStatus) }
+                    item { DeviceSwitch(controlDevice, ledStatus, fanStatus, airConditionerStatus, dustStatus) }
                 }
             }
 
@@ -168,12 +179,16 @@ fun DeviceSwitch(
 
     ledStatus: Int,
     fanStatus: Int,
-    airConditionerStatus: Int
+    airConditionerStatus: Int,
+    dustStatus : Int
+
 ) {
     val itemList = mutableListOf(
         DeviceController("Fan", R.drawable.icon_fan_device),
         DeviceController("Light", R.drawable.icon_light_device),
-        DeviceController("Smart AirConditioner", R.drawable.aircondition_icon)
+        DeviceController("Smart AirConditioner", R.drawable.aircondition_icon),
+        DeviceController("Dust", R.drawable.icon_led),
+
     )
     Column(modifier = Modifier
         .height(300.dp)
@@ -202,9 +217,36 @@ fun DeviceSwitch(
                     .padding(horizontal = 10.dp)
             )
             {
-                DeviceSplitTwo(itemList[1], controlDevice, ledStatus, "led")
+                DeviceSplitTwo(itemList[1], controlDevice, ledStatus, "light")
             }
         }
+//        Row(
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .weight(1f)
+//        ) {
+//            Box(
+//                modifier = Modifier
+//                    .fillMaxHeight()
+//                    .weight(1f)
+//                    .padding(bottom = 10.dp)
+//                    .padding(start = 10.dp)
+//
+//            )
+//            {
+//                DeviceSplitTwo(itemList[2], controlDevice, airConditionerStatus, "air conditioner")
+//            }
+//            Box(
+//                modifier = Modifier
+//                    .fillMaxHeight()
+//                    .weight(1f)
+//                    .padding(bottom = 10.dp)
+//                    .padding(horizontal = 10.dp)
+//            )
+//            {
+//                DeviceSplitTwo(itemList[3], controlDevice, dustStatus, "Wind")
+//            }
+//        }
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -306,7 +348,21 @@ fun DeviceSplitTwo(
     type: String
 ) {
 
-    val id: Int = if (type == "led") 1 else 2
+    var id : Int = 0
+    when(type){
+        "light" -> {
+            id = 1
+        }
+        "fan" -> {
+            id = 2
+        }
+        "air conditioner" ->{
+            id = 3
+        }
+        "dust" ->{
+            id = 4
+        }
+    }
     val infiniteTransition = rememberInfiniteTransition()
     val rotation by infiniteTransition.animateFloat(
         initialValue = 0f,
@@ -317,6 +373,8 @@ fun DeviceSplitTwo(
     )
     var colorFan = if (status == 1) iconselectedcolor else iconunselectedcolor
     var colorLight = if (status == 1) LightColor else iconunselectedcolor
+    var colorAirConditioner = if (status == 1) iconselectedcolor else iconunselectedcolor
+    var colorDust = if (status == 1) LightColor else iconunselectedcolor
     Card(
         modifier = Modifier
             .height(150.dp)
@@ -362,11 +420,33 @@ fun DeviceSplitTwo(
                             )
                         }
 
-                    } else {
+                    } else if(type == "light") {
                         Icon(
                             painter = painterResource(id = item.icon),
                             contentDescription = item.label,
                             tint = colorLight,
+                            modifier = Modifier
+                                .height(45.dp)
+                                .width(45.dp)
+                        )
+                    }
+                    else if(type == "dust")
+                    {
+                        Icon(
+                            painter = painterResource(id = item.icon),
+                            contentDescription = item.label,
+                            tint = colorDust,
+                            modifier = Modifier
+                                .height(45.dp)
+                                .width(45.dp)
+                        )
+                    }
+                    else if(type == "air conditioner")
+                    {
+                        Icon(
+                            painter = painterResource(id = item.icon),
+                            contentDescription = item.label,
+                            tint = colorAirConditioner,
                             modifier = Modifier
                                 .height(45.dp)
                                 .width(45.dp)
@@ -418,11 +498,12 @@ fun DeviceSplitTwo(
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun HomeStatus(temperature: String, humidity: String, light: String) {
+fun HomeStatus(temperature: String, humidity: String, light: String, wind : String) {
+
     val colorTemperature = if (temperature.toFloat() > 30) Red else iconselectedcolor
     val colorHumidity = if (humidity.toFloat() > 50) iconselectedcolor else iconunselectedcolor
     val colorLight = if (light.toFloat() > 1000) LightColor else iconunselectedcolor
-
+    val colorWind = if(wind.toInt() > 40) Color.Green else iconunselectedcolor
     Card(
         modifier = Modifier
             .fillMaxSize()
@@ -472,6 +553,20 @@ fun HomeStatus(temperature: String, humidity: String, light: String) {
                         "Ánh sáng",
                         R.drawable.lights_icon,
                         "${light} lux", colorLight
+                    )
+                )
+            }
+            Box(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .weight(1f)
+            )
+            {
+                HomeStatusItem(
+                    Item = ItemStatus(
+                        "Độ Gió",
+                        R.drawable.icon_dust,
+                        "${wind} m/s", colorWind
                     )
                 )
             }
@@ -528,7 +623,7 @@ data class ItemStatus(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DropDown(viewModel: HomeViewModel) {
-    val list = listOf("Temperature", "Humidity", "Light")
+    val list = listOf("Temperature", "Humidity", "Light", "Wind")
 
 
 //    var selectedText by remember {
@@ -621,6 +716,9 @@ fun Chart(viewModel: HomeViewModel) {
             "Light" -> {
                 listData = viewModel.listLight
             }
+            "Wind"->{
+                listData = viewModel.listWind
+            }
         }
         if(listData.isEmpty())
         {
@@ -655,7 +753,7 @@ fun Chart(viewModel: HomeViewModel) {
                     linesParameters = testLineParameters,
                     isGrid = true,
                     gridColor = Color.Gray,
-                    xAxisData = listOf("0", "1", "2", "3", "4","5", "6", "7", "8", "9"),
+                    xAxisData = listOf("0", "1", "2", "3", "4", "5", "6", "7", "8", "9"),
                     animateChart = true,
                     showGridWithSpacer = true,
                     yAxisStyle = TextStyle(

@@ -19,6 +19,7 @@ class HistoryPageViewModel : ViewModel() {
 
     init {
         fetchHistoryDataSensor()
+        getWind()
     }
 
     fun updateFetchHistoryDataSensor() {
@@ -28,6 +29,21 @@ class HistoryPageViewModel : ViewModel() {
         fetchHistoryDataSensor()
     }
 
+    fun getWind()
+    {
+        viewModelScope.launch {
+            try {
+
+
+                var response = repository.getWind()
+                state.Wind = response.body()!!.data
+
+            } catch (e : Exception)
+            {
+                Log.d("HistoryPage",e.toString())
+            }
+        }
+    }
     fun fetchHistoryDataSensor(
     ) {
 
@@ -51,7 +67,7 @@ class HistoryPageViewModel : ViewModel() {
                         pagination = response.body()?.meta!!,
                         endReach = state.pagination.current_page == response.body()?.meta?.total_page,
                     )
-
+                    Log.d("DevicePageViewModel", state.historyDataSensor.toString())
                     state.isLoading = false
 
 
@@ -86,6 +102,7 @@ class HistoryPageViewModel : ViewModel() {
         var endReach: Boolean = false,
         val error: String? = null,
         var signal: Int = 1,
+        var Wind : Int = 1,
         val pagination: PaginationObject = PaginationObject(1, 25, null, null, null)
     )
 }
