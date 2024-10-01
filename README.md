@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/0a3fd382-d8c7-4e39-989e-5797e85f837d)## About this project:
+## About this project:
 This project aims to create a smart home system using ESP32 and various sensors. The Android app allows users to monitor and control devices remotely.
 
 ### 1. Hardware
