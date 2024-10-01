@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "670453240427",
+    "project_id": "authentication-c82fc",
+    "storage_bucket": "authentication-c82fc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:670453240427:android:24c7c86813ac78e30a972e",
+        "android_client_info": {
+          "package_name": "com.example.smarthomeptit"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBJCeL-Sk0AjJzVw4DedIhf9JhQTbdV90o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
