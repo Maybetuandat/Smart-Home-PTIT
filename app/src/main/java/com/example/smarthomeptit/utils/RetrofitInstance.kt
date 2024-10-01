@@ -12,5 +12,5 @@ object RetrofitInstance {
             .build()
             .create(ApiInterface::class.java)
     }
-    const val url = "http://192.168.20.206:9999"
+    const val url = "https://back-end-iot-496w.onrender.com/"
 }

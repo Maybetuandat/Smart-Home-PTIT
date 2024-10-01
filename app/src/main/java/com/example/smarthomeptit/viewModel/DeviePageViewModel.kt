@@ -59,7 +59,7 @@ class DeviePageViewModel : ViewModel() {
                         endReach = state.pagination.current_page == response.body()?.meta?.total_page,
                     )
 
-
+                    Log.d("DevicePage", response.body()?.data!!.toString())
 
                     state.isLoading = false
 

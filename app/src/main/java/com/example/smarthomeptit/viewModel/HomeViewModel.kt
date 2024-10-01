@@ -14,15 +14,11 @@ import kotlinx.coroutines.launch
 
 @SuppressLint("MutableCollectionMutableState")
 class HomeViewModel : ViewModel() {
-
-
     var selectedChart by mutableStateOf("Light")
     var listTemperature by mutableStateOf(mutableListOf<Double>())
     var listHumidity by mutableStateOf(mutableListOf<Double>())
     var listLight by mutableStateOf(mutableListOf<Double>())
     var isChartLoading by mutableStateOf(false)
-
-
     // data for socket connection
     private val _temperature = MutableLiveData<String>()
     val temperature: LiveData<String> = _temperature
@@ -46,39 +42,30 @@ class HomeViewModel : ViewModel() {
             listTemperature.add(listTemperature.size, data[0].toDouble())
             listHumidity.add(listHumidity.size, data[1].toDouble())
             listLight.add(listLight.size, data[2].toDouble())
-            if (listTemperature.size > 5)
+            if (listTemperature.size > 10)
                 listTemperature.removeAt(0)
-            if (listHumidity.size > 5)
+            if (listHumidity.size > 10)
                 listHumidity.removeAt(0)
-            if (listLight.size > 5)
+            if (listLight.size > 10)
                 listLight.removeAt(0)
         }
     }
-
-
     fun updateLedStatus(status: Int) {
         viewModelScope.launch {
             _ledStatus.value = status
         }
     }
-
     fun updateFanStatus(status: Int) {
         viewModelScope.launch {
             _fanStatus.value = status
         }
     }
-
     fun updateAirConditionerStatus(status: Int) {
         viewModelScope.launch {
             _airConditionerStatus.value = status
         }
     }
-
-    //update api from server
-//    private val apiRepository = ApiRepository()
     private val repository = Repository()
-
-
     init {
         viewModelScope.launch {
             try {
@@ -96,18 +83,10 @@ class HomeViewModel : ViewModel() {
                     isChartLoading = false
 
                 }
-                listTemperature = mutableListOf(10.0, 20.0, 30.0, 40.0, 45.0,10.0, 20.0, 30.0, 40.0, 45.0)
-                listLight = mutableListOf(100.0, 1500.0, 3300.0, 3493.0, 4000.0,100.0, 1500.0, 3300.0, 3493.0, 4000.0)
-                listHumidity = mutableListOf(30.0, 50.0, 60.0, 70.0, 80.0,30.0, 50.0, 60.0, 70.0, 80.0)
-
-                // Đảm bảo rằng cả ba danh sách đã được tải
                isChartLoading = false
-
-
             } catch (e: Exception) {
                 isChartLoading = false
                 Log.e("HomeModel", e.toString())
-
             }
         }
     }
