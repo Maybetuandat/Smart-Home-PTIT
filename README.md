@@ -12,7 +12,10 @@ This project aims to create a smart home system using ESP32 and various sensors.
    - **Architecture**: MVVM (Model-View-ViewModel) for clear separation of concerns and better maintainability.
    - **Language**: Kotlin
    - **UI**: Jetpack Compose for modern, reactive UI development.
-   - **Backend**: Integration with a server for data logging and device management.
+   - **Backend**: Integration with a server for data logging and device management. [Repository](https://github.com/Maybetuandat/back_end_iot)
+   - **Firmware**: ESP32 Sensor Controller for collecting data from DHT11 and LDR sensors. [Repository](https://github.com/Maybetuandat/iot_ioplatform)
+
+
    
 ### 3. Key Features:
    - Real-time monitoring of temperature, humidity, and light levels.
