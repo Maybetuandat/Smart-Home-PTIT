@@ -14,7 +14,7 @@ This project aims to create a smart home system using ESP32 and various sensors.
    - **UI**: Jetpack Compose for modern, reactive UI development.
    - **Backend**: Integration with a server for data logging and device management.
    
-### Key Features:
+### 3.Key Features:
    - Real-time monitoring of temperature, humidity, and light levels.
    - Remote control of devices like LEDs.
    - User-friendly interface built with Jetpack Compose.
