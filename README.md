@@ -22,11 +22,13 @@ This project aims to create a smart home system using ESP32 and various sensors.
    
 ### 4. Overview
    - **System**  
-     ![image](https://github.com/user-attachments/assets/3e704d7e-a9f0-409e-9e16-21fe87d1e4b2)
+     ![System Overview](https://github.com/user-attachments/assets/3e704d7e-a9f0-409e-9e16-21fe87d1e4b2 "Tổng quan hệ thống")
+     
 
+   - **Use Case**  
+     ![Use Case Diagram](https://github.com/user-attachments/assets/9c687214-1304-47d3-80d8-2d99112aea53 "Use Case Diagram")
+    
 
-   - **Use Case**
-        ![image](https://github.com/user-attachments/assets/9c687214-1304-47d3-80d8-2d99112aea53)
 
 ### 5. View
    - **Home**  
