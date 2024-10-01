@@ -44,7 +44,8 @@ This project aims to create a smart home system using ESP32 and various sensors.
 
    
    - **Profile**  
-     ![image](https://github.com/user-attachments/assets/f6ec6d84-1517-4ecc-a10e-b2e8f652d7d7)
+     ![image](https://github.com/user-attachments/assets/8004f8e5-4476-49c0-82e4-40c4e8a35635)
+
 
 
 
